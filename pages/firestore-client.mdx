@@ -1,0 +1,207 @@
+# Firestore Web
+
+## CREATE
+
+### Set Document [doc](https://firebase.google.com/docs/firestore/query-data/queries#example_data)
+
+```js  copy
+import { collection, doc, setDoc } from "firebase/firestore";
+
+const usersRef = collection(db, "users");
+
+await setDoc(doc(usersRef, "Rick"), {
+  regions: ["west_coast", "norcal"],
+});
+```
+
+### Add Document [doc](https://firebase.google.com/docs/firestore/quickstart#add_data)
+
+```js copy
+import { collection, addDoc } from "firebase/firestore";
+
+const usersRef = collection(db, "users");
+
+const docRef = await addDoc(usersRef, {
+  name: "Rick",
+});
+```
+
+## READ
+
+### Get Document [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document)
+
+```js copy
+import { doc, getDoc } from "firebase/firestore";
+
+const docSnap = await getDoc(doc(db, "cities", "SF"););
+
+// docSnap.exists() 
+```
+
+
+
+### MORE Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
+
+```js copy
+import { doc, onSnapshot } from "firebase/firestore";
+
+const unsub = onSnapshot(doc(db, "cities", "SF"), (doc) => {
+    console.log("Current data: ", doc.data());
+});
+```
+
+### Get All documents from Collection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+
+```js copy
+import { collection, getDocs } from "firebase/firestore";
+
+const usersRef = collection(db, "users");
+const querySnapshot = await getDocs(usersRef);
+
+querySnapshot.forEach((doc) => {
+  console.log(`${doc.id} => ${doc.data()}`);
+});
+```
+
+### Get All documents from subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+
+```js copy
+const { collection, getDocs } = require("firebase/firestore");
+
+const usersRef = collection(db, "users", "rick", "problems"); // UID
+const querySnapshot = await getDocs(usersRef);
+
+querySnapshot.forEach((doc) => {
+  // doc.data() is never undefined for query doc snapshots
+  console.log(doc.id, " => ", doc.data());
+});
+```
+
+### Get Filtered documents from collections (query) [doc](https://firebase.google.com/docs/firestore/query-data/queries)
+
+```js copy
+import { collection, query, where, getDocs } from "firebase/firestore";
+
+const usersRef = collection(db, "users");
+const q = query(
+  usersRef,
+  where("capital", "==", true),
+  where("population", ">", 1000000)
+);
+
+const querySnapshot = await getDocs(q);
+
+querySnapshot.forEach((doc) => {
+  // doc.data() is never undefined for query doc snapshots
+  console.log(doc.id, " => ", doc.data());
+});
+```
+
+#### Query examples
+
+
+```js copy
+where("population", ">", 1000000),
+where("regions", "array-contains", "west_coast"),
+where("regions", "array-contains-any", ["west_coast", "east_coast"]); // returns every city document where the regions field is an array that contains west_coast or east_coast
+where("country", "in", ["USA", "Japan"]); //eturns every city document where the country field is set to USA or Japan
+orderBy("name", "desc"); // orders responses
+limit(3); // limits reponses
+or(where("capital", "==", true), where("population", ">=", 1000000));
+```
+
+```md
+< less than
+<= less than or equal to
+== equal to
+
+> greater than
+>= greater than or equal to
+!= not equal to
+
+array-contains
+array-contains-any
+in
+not-in
+```
+
+[Fancy stuff can count() sum() and avarage()](https://firebase.google.com/docs/firestore/query-data/aggregation-queries)
+
+[Pagenate startAt() endAt](https://firebase.google.com/docs/firestore/query-data/query-cursors)
+
+## UPDATE
+
+### Update Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update-data)
+
+```js  copy
+import { doc, updateDoc } from "firebase/firestore";
+
+await updateDoc(doc(db, "cities", "DC");, {
+  capital: true,
+});
+```
+
+### Update nested object [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects)
+
+```js  copy
+import { doc, setDoc, updateDoc } from "firebase/firestore"; 
+
+// Create an initial document to update.
+const frankDocRef = doc(db, "users", "frank");
+
+await setDoc(frankDocRef, {
+    name: "Frank",
+});
+
+// To update age and favorite color:
+await updateDoc(frankDocRef, {
+    "age": 13,
+});
+```
+
+### Update Array [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array)
+
+```js  copy
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+
+const washingtonRef = doc(db, "cities", "DC");
+
+// Atomically add a new region to the "regions" array field.
+await updateDoc(washingtonRef, {
+  regions: arrayUnion("greater_virginia"),
+});
+
+// Atomically remove a region from the "regions" array field.
+await updateDoc(washingtonRef, {
+  regions: arrayRemove("east_coast"),
+});
+```
+
+## DELETE
+
+### Delete document [doc](https://firebase.google.com/docs/firestore/manage-data/delete-data)
+
+
+
+```js  copy
+import { doc, deleteDoc } from "firebase/firestore";
+
+await deleteDoc(doc(db, "cities", "DC")); //Deleting a document does not delete its subcollections!
+```
+
+### Delete document field
+
+```js  copy
+import { doc, updateDoc, deleteField } from "firebase/firestore";
+
+const cityRef = doc(db, 'cities', 'BJ');
+
+// Remove the 'capital' field from the document
+await updateDoc(cityRef, {
+    capital: deleteField()
+});
+```
+
+### Delete collection
+
+Deleting collections from a Web client is not recommended.

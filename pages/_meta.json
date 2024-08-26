@@ -1,11 +1,7 @@
 {
-  "index": "Introduction",
-  "another": "Another Page",
-  "advanced": "Advanced (A Folder)",
-  "about": {
-    "title": "About",
-    "type": "page"
-  },
+  "index": "Hello",
+  "firestore-client": "Firestore Client",
+  "firestore-admin": "Firestore Admin",
   "contact": {
     "title": "Contact ↗",
     "type": "page",
