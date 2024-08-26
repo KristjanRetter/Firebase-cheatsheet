@@ -40,7 +40,7 @@ const docSnap = await getDoc(doc(db, "cities", "SF"););
 
 
 
-### MORE Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
+### TODO!!! Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
 
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
@@ -72,9 +72,10 @@ const usersRef = collection(db, "users", "rick", "problems"); // UID
 const querySnapshot = await getDocs(usersRef);
 
 querySnapshot.forEach((doc) => {
-  // doc.data() is never undefined for query doc snapshots
   console.log(doc.id, " => ", doc.data());
 });
+
+// doc.data() is never undefined for query doc snapshots
 ```
 
 ### Get Filtered documents from collections (query) [doc](https://firebase.google.com/docs/firestore/query-data/queries)
@@ -88,13 +89,12 @@ const q = query(
   where("capital", "==", true),
   where("population", ">", 1000000)
 );
-
 const querySnapshot = await getDocs(q);
 
 querySnapshot.forEach((doc) => {
-  // doc.data() is never undefined for query doc snapshots
   console.log(doc.id, " => ", doc.data());
 });
+
 ```
 
 #### Query examples
@@ -146,15 +146,7 @@ await updateDoc(doc(db, "cities", "DC");, {
 ```js  copy
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 
-// Create an initial document to update.
-const frankDocRef = doc(db, "users", "frank");
-
-await setDoc(frankDocRef, {
-    name: "Frank",
-});
-
-// To update age and favorite color:
-await updateDoc(frankDocRef, {
+await updateDoc(doc(db, "users", "frank"), {
     "age": 13,
 });
 ```
@@ -164,16 +156,9 @@ await updateDoc(frankDocRef, {
 ```js  copy
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-const washingtonRef = doc(db, "cities", "DC");
-
-// Atomically add a new region to the "regions" array field.
-await updateDoc(washingtonRef, {
-  regions: arrayUnion("greater_virginia"),
-});
-
-// Atomically remove a region from the "regions" array field.
-await updateDoc(washingtonRef, {
-  regions: arrayRemove("east_coast"),
+await updateDoc(doc(db, "cities", "DC"), {
+  noneu: arrayUnion("uk"),
+  eu: arrayRemove("uk"),
 });
 ```
 
@@ -186,7 +171,9 @@ await updateDoc(washingtonRef, {
 ```js  copy
 import { doc, deleteDoc } from "firebase/firestore";
 
-await deleteDoc(doc(db, "cities", "DC")); //Deleting a document does not delete its subcollections!
+await deleteDoc(doc(db, "cities", "DC")); 
+
+//Deleting a document does not delete its subcollections!
 ```
 
 ### Delete document field
@@ -194,10 +181,7 @@ await deleteDoc(doc(db, "cities", "DC")); //Deleting a document does not delete 
 ```js  copy
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 
-const cityRef = doc(db, 'cities', 'BJ');
-
-// Remove the 'capital' field from the document
-await updateDoc(cityRef, {
+await updateDoc(doc(db, 'cities', 'BJ'), {
     capital: deleteField()
 });
 ```
