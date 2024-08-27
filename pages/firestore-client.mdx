@@ -9,8 +9,8 @@ import { collection, doc, setDoc } from "firebase/firestore";
 
 const usersRef = collection(db, "users");
 
-await setDoc(doc(usersRef, "Rick"), {
-  regions: ["west_coast", "norcal"],
+await setDoc(doc(usersRef, "MichaelScott"), {
+  role: "Regional Manager ",
 });
 ```
 
@@ -22,7 +22,7 @@ import { collection, addDoc } from "firebase/firestore";
 const usersRef = collection(db, "users");
 
 const docRef = await addDoc(usersRef, {
-  name: "Rick",
+  name: "Dwight Schrute",
 });
 ```
 
@@ -33,7 +33,7 @@ const docRef = await addDoc(usersRef, {
 ```js copy
 import { doc, getDoc } from "firebase/firestore";
 
-const docSnap = await getDoc(doc(db, "cities", "SF"););
+const docSnap = await getDoc(doc(db, "users", "MichaelScott"););
 
 // docSnap.exists() 
 ```
@@ -45,7 +45,7 @@ const docSnap = await getDoc(doc(db, "cities", "SF"););
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
 
-const unsub = onSnapshot(doc(db, "cities", "SF"), (doc) => {
+const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
     console.log("Current data: ", doc.data());
 });
 ```
@@ -68,7 +68,7 @@ querySnapshot.forEach((doc) => {
 ```js copy
 const { collection, getDocs } = require("firebase/firestore");
 
-const usersRef = collection(db, "users", "rick", "problems"); // UID
+const usersRef = collection(db, "users", "MichaelScott", "problems"); // UID
 const querySnapshot = await getDocs(usersRef);
 
 querySnapshot.forEach((doc) => {
@@ -86,7 +86,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 const usersRef = collection(db, "users");
 const q = query(
   usersRef,
-  where("capital", "==", true),
+  where("mental", "==", true),
   where("population", ">", 1000000)
 );
 const querySnapshot = await getDocs(q);

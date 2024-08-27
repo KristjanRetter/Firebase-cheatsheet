@@ -1,31 +1,219 @@
-# Another Page
+# Firestore Admin
 
-```js filename="demo.js" {3} copy
-let a = 1;
+## CREATE
 
-console.log(a);
+### Set Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#set_a_document)
+
+```js copy
+const res = await db.collection("cities").doc("LA").set({
+  name: "Los Angeles",
+});
+
+// merges does not overwrite
+const cityRef = db.collection("cities").doc("LA");
+
+const res = await cityRef.set(
+  {
+    capital: false,
+  },
+  { merge: true }
+);
 ```
 
-## Component
+### Add Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document)
 
-import { useState } from 'react'
+```js copy
+const res = await db.collection("cities").add({
+  name: "Tokyo",
+});
+```
 
-{/* Import CSS modules */}
-import styles from '../components/counters.module.css'
+## READ
 
-export const Counter = () => {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <button onClick={() => setCount(count + 1)} className={styles.counter}>Clicked {count} times</button>
-    </div>
-  );
-};
+### Get Document [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document)
 
-<Counter/>
+```js copy
+const cityRef = db.collection("cities").doc("SF");
+const doc = await cityRef.get();
 
-## External Component
+//doc.exists
+```
 
-import Counters from '../components/counters'
+### TODO!!! Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
 
-<Counters />
+```js copy
+const doc = db.collection("cities").doc("SF");
+
+const observer = doc.onSnapshot(
+  (docSnapshot) => {
+    console.log(`Received doc snapshot: ${docSnapshot}`);
+    // ...
+  },
+  (err) => {
+    console.log(`Encountered error: ${err}`);
+  }
+);
+```
+
+### Get All documents from Collection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+
+```js copy
+const snapshot = await db.collection("users").get();
+snapshot.forEach((doc) => {
+  console.log(doc.id, "=>", doc.data());
+});
+```
+
+### TODO check Get All documents from subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+
+```js copy
+const cityRef = db.collection("cities").doc("SF").collection("bars");
+const doc = await cityRef.get();
+```
+
+### Get Filtered documents from collections (query) [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection)
+
+```js copy
+const citiesRef = db.collection("cities");
+const snapshot = await citiesRef
+  .where("capital", "==", true)
+  .where("population", ">", 1000000)
+  .get();
+
+//snapshot.empty
+
+snapshot.forEach((doc) => {
+  console.log(doc.id, "=>", doc.data());
+});
+```
+
+#### Query examples
+
+```js copy
+.where("population", ">", 1000000),
+.where("regions", "array-contains", "west_coast"),
+.where("regions", "array-contains-any", ["west_coast", "east_coast"]); // returns every city document where the regions field is an array that contains west_coast or east_coast
+.where("country", "in", ["USA", "Japan"]); //eturns every city document where the country field is set to USA or Japan
+.orderBy("name", "desc"); // orders responses
+.limit(3); // limits reponses
+.where(
+    Filter.or(
+      Filter.where('capital', '==', true),
+      Filter.where('population', '>=', 1000000)
+    )
+  )
+```
+
+```md
+< less than
+<= less than or equal to
+== equal to
+
+> greater than
+> = greater than or equal to
+> != not equal to
+
+array-contains
+array-contains-any
+in
+not-in
+```
+
+### Collection group queries TODO
+
+## UPDATE
+
+### Update Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update-data)
+
+```js copy
+const cityRef = db.collection("cities").doc("DC");
+
+// Set the 'capital' field of the city
+const res = await cityRef.update({ capital: true });
+```
+
+### Update nested object [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects)
+
+```js copy
+const res = await db.collection("users").doc("Frank").update({
+  "favorites.color": "Red",
+});
+```
+
+### Update Array [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array)
+
+```js copy
+const washingtonRef = db.collection("cities").doc("DC");
+
+// Atomically add a new region to the "regions" array field.
+const unionRes = await washingtonRef.update({
+  eu: FieldValue.arrayUnion("greater_virginia"),
+  noneu: FieldValue.arrayRemove("east_coast"),
+  un: FieldValue.arrayUnion("south_carolina", "texas"),
+});
+```
+
+## DELETE
+
+### Delete document [doc](https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents)
+
+```js copy
+const res = await db.collection("cities").doc("DC").delete();
+```
+
+### Delete document field
+
+```js copy
+const cityRef = db.collection("cities").doc("BJ");
+
+const res = await cityRef.update({
+  capital: FieldValue.delete(),
+});
+```
+
+### Delete collection // TODO check
+
+```js copy
+const snapshot = db.collection("cities").listDocuments();
+
+snapshot.forEach((doc) => {
+  doc.delete();
+});
+```
+
+OR
+
+```js copy
+async function deleteCollection(db, collectionPath, batchSize) {
+  const collectionRef = db.collection(collectionPath);
+  const query = collectionRef.orderBy("__name__").limit(batchSize);
+
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(db, query, resolve).catch(reject);
+  });
+}
+
+async function deleteQueryBatch(db, query, resolve) {
+  const snapshot = await query.get();
+
+  const batchSize = snapshot.size;
+  if (batchSize === 0) {
+    // When there are no documents left, we are done
+    resolve();
+    return;
+  }
+
+  // Delete documents in a batch
+  const batch = db.batch();
+  snapshot.docs.forEach((doc) => {
+    batch.delete(doc.ref);
+  });
+  await batch.commit();
+
+  // Recurse on the next process tick, to avoid
+  // exploding the stack.
+  process.nextTick(() => {
+    deleteQueryBatch(db, query, resolve);
+  });
+}
+```
