@@ -38,8 +38,8 @@ const doc = await cityRef.get();
 
 //doc.exists
 ```
-
-### TODO!!! Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
+ TODO!!! 
+### Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
 
 ```js copy
 const doc = db.collection("cities").doc("SF");
@@ -55,7 +55,7 @@ const observer = doc.onSnapshot(
 );
 ```
 
-### Get All documents from Collection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+### Get all documents [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
 
 ```js copy
 const snapshot = await db.collection("users").get();
@@ -63,15 +63,15 @@ snapshot.forEach((doc) => {
   console.log(doc.id, "=>", doc.data());
 });
 ```
-
-### TODO check Get All documents from subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+TODO check 
+### Get All documents subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
 
 ```js copy
 const cityRef = db.collection("cities").doc("SF").collection("bars");
 const doc = await cityRef.get();
 ```
 
-### Get Filtered documents from collections (query) [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection)
+### Filtered documents (query) [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection)
 
 ```js copy
 const citiesRef = db.collection("cities");

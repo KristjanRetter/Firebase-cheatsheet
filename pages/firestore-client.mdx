@@ -39,8 +39,8 @@ const docSnap = await getDoc(doc(db, "users", "MichaelScott"););
 ```
 
 
-
-### TODO!!! Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
+TODO!!! 
+### Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
 
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
@@ -50,7 +50,7 @@ const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
 });
 ```
 
-### Get All documents from Collection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+### Get All documents [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
 
 ```js copy
 import { collection, getDocs } from "firebase/firestore";
@@ -63,7 +63,7 @@ querySnapshot.forEach((doc) => {
 });
 ```
 
-### Get All documents from subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+### Get All documents subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
 
 ```js copy
 const { collection, getDocs } = require("firebase/firestore");
@@ -78,7 +78,7 @@ querySnapshot.forEach((doc) => {
 // doc.data() is never undefined for query doc snapshots
 ```
 
-### Get Filtered documents from collections (query) [doc](https://firebase.google.com/docs/firestore/query-data/queries)
+### Filter documents (query) [doc](https://firebase.google.com/docs/firestore/query-data/queries)
 
 ```js copy
 import { collection, query, where, getDocs } from "firebase/firestore";
