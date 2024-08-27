@@ -147,7 +147,7 @@ await updateDoc(doc(db, "cities", "DC");, {
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
 
 await updateDoc(doc(db, "users", "frank"), {
-    "age": 13,
+    "favorites.color": "Red"
 });
 ```
 
