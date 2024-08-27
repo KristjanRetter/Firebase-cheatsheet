@@ -4,7 +4,6 @@
   "firestore-admin": "Firestore Admin",
   "contact": {
     "title": "Contact ↗",
-    "type": "page",
     "href": "https://x.com/KristjanRetter",
     "newWindow": true
   }
