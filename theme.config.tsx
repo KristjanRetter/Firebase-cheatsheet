@@ -2,17 +2,11 @@ import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 
 const config: DocsThemeConfig = {
-  logo: <span>My Project</span>,
+  logo: <span>Firebase Cheatsheet</span>,
   project: {
-    link: 'https://github.com/shuding/nextra-docs-template',
+    link: 'https://github.com/KristjanRetter/Firebase-cheatsheet',
   },
-  chat: {
-    link: 'https://discord.com',
-  },
-  docsRepositoryBase: 'https://github.com/shuding/nextra-docs-template',
-  footer: {
-    text: 'Nextra Docs Template',
-  },
+  docsRepositoryBase: 'https://github.com/KristjanRetter/Firebase-cheatsheet/blob/main/',
 }
 
 export default config
