@@ -1,50 +1,45 @@
-# Firestore Admin
+# Firestore Admin Cheat Sheet
 
 ## CREATE
 
-### Set Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#set_a_document)
+### Set Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#set_a_document"}>Firebase Doc</a>
+
 
 ```js copy
-const res = await db.collection("cities").doc("LA").set({
-  name: "Los Angeles",
-});
+await db.collection("cities").doc("LA").set({ name: "Los Angeles" });
 
 // merges does not overwrite
-const cityRef = db.collection("cities").doc("LA");
-
-const res = await cityRef.set(
-  {
-    capital: false,
-  },
-  { merge: true }
-);
+await db.collection("cities").doc("LA").set({ capital: false }, { merge: true });
 ```
 
-### Add Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document)
+### Add Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#add_a_document"}>Firebase Doc</a>
+
 
 ```js copy
-const res = await db.collection("cities").add({
-  name: "Tokyo",
-});
+await db.collection("cities").add({ name: "Tokyo" });
 ```
 
 ## READ
 
-### Get Document [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document)
+### Get Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document"}>Firebase Doc</a>
+
 
 ```js copy
-const cityRef = db.collection("cities").doc("SF");
-const doc = await cityRef.get();
+await db.collection("cities").doc("SF").get();
 
 //doc.exists
 ```
  TODO!!! 
-### Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
+### Get Document Realtime
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/listen"}>Firebase Doc</a>
+
 
 ```js copy
-const doc = db.collection("cities").doc("SF");
 
-const observer = doc.onSnapshot(
+db.collection("cities").doc("SF").onSnapshot(
   (docSnapshot) => {
     console.log(`Received doc snapshot: ${docSnapshot}`);
     // ...
@@ -55,7 +50,9 @@ const observer = doc.onSnapshot(
 );
 ```
 
-### Get all documents [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+### Get all documents 
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection"}>Firebase Doc</a>
+
 
 ```js copy
 const snapshot = await db.collection("users").get();
@@ -64,14 +61,18 @@ snapshot.forEach((doc) => {
 });
 ```
 TODO check 
-### Get All documents subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+### Get All documents subcollection
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"}>Firebase Doc</a>
+
 
 ```js copy
-const cityRef = db.collection("cities").doc("SF").collection("bars");
-const doc = await cityRef.get();
+const ref = db.collection("cities").doc("SF").collection("bars");
+const doc = await ref.get();
 ```
 
-### Filtered documents (query) [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection)
+### Filtered documents (query)
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection"}>Firebase Doc</a>
+
 
 ```js copy
 const citiesRef = db.collection("cities");
@@ -123,16 +124,20 @@ not-in
 
 ## UPDATE
 
-### Update Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update-data)
+### Update Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update-data"}>Firebase Doc</a>
+
 
 ```js copy
-const cityRef = db.collection("cities").doc("DC");
+const ref = db.collection("cities").doc("DC");
 
 // Set the 'capital' field of the city
-const res = await cityRef.update({ capital: true });
+const res = await ref.update({ capital: true });
 ```
 
-### Update nested object [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects)
+### Update nested object
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects"}>Firebase Doc</a>
+
 
 ```js copy
 const res = await db.collection("users").doc("Frank").update({
@@ -140,7 +145,9 @@ const res = await db.collection("users").doc("Frank").update({
 });
 ```
 
-### Update Array [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array)
+### Update Array
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array"}>Firebase Doc</a>
+
 
 ```js copy
 const washingtonRef = db.collection("cities").doc("DC");
@@ -155,7 +162,9 @@ const unionRes = await washingtonRef.update({
 
 ## DELETE
 
-### Delete document [doc](https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents)
+### Delete document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents"}>Firebase Doc</a>
+
 
 ```js copy
 const res = await db.collection("cities").doc("DC").delete();
@@ -164,9 +173,9 @@ const res = await db.collection("cities").doc("DC").delete();
 ### Delete document field
 
 ```js copy
-const cityRef = db.collection("cities").doc("BJ");
+const ref = db.collection("cities").doc("BJ");
 
-const res = await cityRef.update({
+const res = await ref.update({
   capital: FieldValue.delete(),
 });
 ```

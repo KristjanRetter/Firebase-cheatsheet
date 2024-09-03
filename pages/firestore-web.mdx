@@ -1,46 +1,52 @@
-# Firestore Web
+# Firestore Modular Web Cheat Sheet
 
 ## CREATE
 
-### Set Document [doc](https://firebase.google.com/docs/firestore/query-data/queries#example_data)
+### Set Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/queries#example_data"}>Firebase Doc</a>
+
 
 ```js  copy
 import { collection, doc, setDoc } from "firebase/firestore";
 
-const usersRef = collection(db, "users");
+const ref = collection(db, "users");
 
-await setDoc(doc(usersRef, "MichaelScott"), {
+await setDoc(doc(ref, "MichaelScott"), {
   role: "Regional Manager ",
 });
 ```
 
-### Add Document [doc](https://firebase.google.com/docs/firestore/quickstart#add_data)
+### Add Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/quickstart#add_data"}>Firebase Doc</a>
+
 
 ```js copy
 import { collection, addDoc } from "firebase/firestore";
 
-const usersRef = collection(db, "users");
+const ref = collection(db, "users");
 
-const docRef = await addDoc(usersRef, {
+const docRef = await addDoc(ref, {
   name: "Dwight Schrute",
 });
 ```
 
 ## READ
 
-### Get Document [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document)
+### Get Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document"}>Firebase Doc</a>
+
 
 ```js copy
 import { doc, getDoc } from "firebase/firestore";
 
-const docSnap = await getDoc(doc(db, "users", "MichaelScott"););
+const snapshot = await getDoc(doc(db, "users", "MichaelScott"););
 
-// docSnap.exists() 
+// snapshot.exists() 
 ```
 
+### Get Document Realtime
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/listen"}>Firebase Doc</a>
 
-TODO!!! 
-### Get Document Realtime [doc](https://firebase.google.com/docs/firestore/query-data/listen)
 
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
@@ -50,48 +56,52 @@ const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
 });
 ```
 
-### Get All documents [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection)
+### Get All documents
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection"}>Firebase Doc</a>
 
 ```js copy
 import { collection, getDocs } from "firebase/firestore";
 
-const usersRef = collection(db, "users");
-const querySnapshot = await getDocs(usersRef);
+const ref = collection(db, "users");
+const snapshot = await getDocs(ref);
 
-querySnapshot.forEach((doc) => {
+snapshot.forEach((doc) => {
   console.log(`${doc.id} => ${doc.data()}`);
 });
 ```
 
-### Get All documents subcollection [doc](https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection)
+### Get All subcollection
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"}>Firebase Doc</a>
 
 ```js copy
 const { collection, getDocs } = require("firebase/firestore");
 
-const usersRef = collection(db, "users", "MichaelScott", "problems"); // UID
-const querySnapshot = await getDocs(usersRef);
+const ref = collection(db, "users", "MichaelScott", "problems"); 
+const snapshot = await getDocs(ref);
 
-querySnapshot.forEach((doc) => {
+snapshot.forEach((doc) => {
   console.log(doc.id, " => ", doc.data());
 });
 
 // doc.data() is never undefined for query doc snapshots
 ```
 
-### Filter documents (query) [doc](https://firebase.google.com/docs/firestore/query-data/queries)
+### Filter documents (query)
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/queries"}>Firebase Doc</a>
+
 
 ```js copy
 import { collection, query, where, getDocs } from "firebase/firestore";
 
-const usersRef = collection(db, "users");
+const ref = collection(db, "users");
 const q = query(
-  usersRef,
+  ref,
   where("mental", "==", true),
   where("population", ">", 1000000)
 );
-const querySnapshot = await getDocs(q);
+const snapshot = await getDocs(q);
 
-querySnapshot.forEach((doc) => {
+snapshot.forEach((doc) => {
   console.log(doc.id, " => ", doc.data());
 });
 
@@ -131,7 +141,9 @@ not-in
 
 ## UPDATE
 
-### Update Document [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update-data)
+### Update Document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update-data"}>Firebase Doc</a>
+
 
 ```js  copy
 import { doc, updateDoc } from "firebase/firestore";
@@ -141,7 +153,9 @@ await updateDoc(doc(db, "cities", "DC");, {
 });
 ```
 
-### Update nested object [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects)
+### Update nested object 
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects"}>Firebase Doc</a>
+
 
 ```js  copy
 import { doc, setDoc, updateDoc } from "firebase/firestore"; 
@@ -151,7 +165,9 @@ await updateDoc(doc(db, "users", "frank"), {
 });
 ```
 
-### Update Array [doc](https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array)
+### Update Array
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array"}>Firebase Doc</a>
+
 
 ```js  copy
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
@@ -164,7 +180,9 @@ await updateDoc(doc(db, "cities", "DC"), {
 
 ## DELETE
 
-### Delete document [doc](https://firebase.google.com/docs/firestore/manage-data/delete-data)
+### Delete document
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/delete-data"}>Firebase Doc</a>
+
 
 
 
