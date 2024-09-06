@@ -6,7 +6,8 @@ This is a template for creating documentation with [Nextra](https://nextra.site)
 
 [![](.github/screenshot.png)](https://nextra-docs-template.vercel.app)
 
-## Quick Start
+## Quick Start   
+
 
 Click the button to clone this repository and deploy it on Vercel:
 
