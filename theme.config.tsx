@@ -1,12 +1,12 @@
-import React from 'react'
-import { DocsThemeConfig } from 'nextra-theme-docs'
+import { DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
-  logo: <span>Firebase Cheatsheet</span>,
+  logo: "Firecheat",
   project: {
-    link: 'https://github.com/KristjanRetter/Firebase-cheatsheet',
+    link: "https://github.com/KristjanRetter/Firebase-cheatsheet",
   },
-  docsRepositoryBase: 'https://github.com/KristjanRetter/Firebase-cheatsheet/blob/main/',
-}
+  docsRepositoryBase:
+    "https://github.com/KristjanRetter/Firebase-cheatsheet/blob/main/",
+};
 
-export default config
+export default config;

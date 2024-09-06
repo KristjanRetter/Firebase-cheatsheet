@@ -1,5 +1,11 @@
 {
   "index": "Hello",
   "firestore-web": "Firestore Web",
-  "firestore-admin": "Firestore Admin"
+  "firestore-admin": "Firestore Admin",
+  "contact": {
+    "title": "Made with ☕ by Kristjan 𝕏",
+    "type": "page",
+    "href": "https://x.com/KristjanRetter",
+    "newWindow": true
+  }
 }
