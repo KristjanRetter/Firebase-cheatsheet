@@ -7,5 +7,9 @@
     "type": "page",
     "href": "https://x.com/KristjanRetter",
     "newWindow": true
+  },
+  "about": {
+    "title": "About",
+    "type": "page"
   }
 }
