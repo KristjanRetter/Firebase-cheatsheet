@@ -14,6 +14,9 @@ const config: DocsThemeConfig = {
         <a
           style={{
             fontSize: "12px",
+            marginLeft: "48px",
+            marginRight: "30px",
+
           }}
           href="https://x.com/KristjanRetter"
           target="_blank"
