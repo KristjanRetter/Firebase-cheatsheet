@@ -20,10 +20,10 @@ const config: DocsThemeConfig = {
         >
           <span
             style={{
-              fontSize: "12px",
+              fontSize: "13px",
             }}
           >
-            Made with ☕ by{" "}
+            Made with <span style={{ fontSize: "16px" }}>☕</span> by{" "}
           </span>{" "}
           <span
             style={{
