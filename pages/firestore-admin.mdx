@@ -7,10 +7,11 @@
 
 
 ```js copy
-await db.collection("cities").doc("LA").set({ name: "Los Angeles" });
-
+await db.collection("users").doc("DwightSchrute").set({ role: "Assistant to the Regional Manager" });
+```
+```js copy
 // merges does not overwrite
-await db.collection("cities").doc("LA").set({ capital: false }, { merge: true });
+await db.collection("users").doc("DwightSchrute").set({ atOffice: true }, { merge: true });
 ```
 
 ### Add Document
@@ -18,7 +19,13 @@ await db.collection("cities").doc("LA").set({ capital: false }, { merge: true })
 
 
 ```js copy
-await db.collection("cities").add({ name: "Tokyo" });
+await db.collection("users").add({ name: "Npc" });
+```
+
+### Add Subcollection
+
+```js copy
+await db.collection("users").doc("DwightSchrute").collection("problems").add({name: "Jim"});
 ```
 
 ## READ
@@ -28,26 +35,28 @@ await db.collection("cities").add({ name: "Tokyo" });
 
 
 ```js copy
-await db.collection("cities").doc("SF").get();
+const docSnap = await db.collection("users").doc("DwightSchrute").get();
 
-//doc.exists
+console.log(docSnap.data())
 ```
- TODO!!! 
+
 ### Get Document Realtime
 <a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/listen"}>Firebase Doc</a>
 
 
 ```js copy
 
-db.collection("cities").doc("SF").onSnapshot(
-  (docSnapshot) => {
-    console.log(`Received doc snapshot: ${docSnapshot}`);
-    // ...
+const unsub = db.collection("users").doc("DwightSchrute").onSnapshot(
+  (docSnap) => {
+    console.log(docSnap.data())
   },
   (err) => {
-    console.log(`Encountered error: ${err}`);
+    console.log(err);
   }
 );
+
+// Stop listening to changes
+unsub()
 ```
 
 ### Get all documents 
@@ -55,36 +64,48 @@ db.collection("cities").doc("SF").onSnapshot(
 
 
 ```js copy
-const snapshot = await db.collection("users").get();
-snapshot.forEach((doc) => {
-  console.log(doc.id, "=>", doc.data());
+const querySnap = await db.collection("users").get();
+querySnap.forEach((docSnap) => {
+  console.log({...docSnap.data(), id: docSnap.id});
 });
 ```
-TODO check 
-### Get All documents subcollection
+
+### Get document subcollection
 <a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"}>Firebase Doc</a>
 
 
 ```js copy
-const ref = db.collection("cities").doc("SF").collection("bars");
-const doc = await ref.get();
+  const querySnap = await db.collection("users").doc("DwightSchrute").collection("problems").get();
+
+  querySnap.forEach((docSnap) => {
+    console.log(docSnap.data());
+  });
 ```
 
-### Filtered documents (query)
+### Get All subcollections
+<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"}>Firebase Doc</a>
+
+
+```js copy
+const querySnap = await db.collectionGroup('problems').get(); // get all subcollections with the name problems across all users
+
+querySnap.forEach((docSnap) => {
+  console.log(docSnap.data());
+});
+```
+
+### Query documents
 <a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_multiple_documents_from_a_collection"}>Firebase Doc</a>
 
 
 ```js copy
-const citiesRef = db.collection("cities");
-const snapshot = await citiesRef
-  .where("capital", "==", true)
-  .where("population", ">", 1000000)
+const querySnap = await db.collection("users")
+  .where("atOffice", "==", true)
+  .where("role", "==", "Assistant to the Regional Manager")
   .get();
 
-//snapshot.empty
-
-snapshot.forEach((doc) => {
-  console.log(doc.id, "=>", doc.data());
+querySnap.forEach((docSnap) => {
+  console.log(docSnap.data());
 });
 ```
 
@@ -111,16 +132,14 @@ snapshot.forEach((doc) => {
 == equal to
 
 > greater than
-> = greater than or equal to
-> != not equal to
+>= greater than or equal to
+!= not equal to
 
 array-contains
 array-contains-any
 in
 not-in
 ```
-
-### Collection group queries TODO
 
 ## UPDATE
 
@@ -129,10 +148,7 @@ not-in
 
 
 ```js copy
-const ref = db.collection("cities").doc("DC");
-
-// Set the 'capital' field of the city
-const res = await ref.update({ capital: true });
+await db.collection("users").doc("DwightSchrute").update({ atOffice: false });
 ```
 
 ### Update nested object
@@ -140,8 +156,8 @@ const res = await ref.update({ capital: true });
 
 
 ```js copy
-const res = await db.collection("users").doc("Frank").update({
-  "favorites.color": "Red",
+await db.collection("users").doc("DwightSchrute").update({
+  "favorites.song": "Kickstart My Heart",
 });
 ```
 
@@ -150,79 +166,43 @@ const res = await db.collection("users").doc("Frank").update({
 
 
 ```js copy
-const washingtonRef = db.collection("cities").doc("DC");
+import { FieldValue } from "firebase-admin/firestore"
 
-// Atomically add a new region to the "regions" array field.
-const unionRes = await washingtonRef.update({
-  eu: FieldValue.arrayUnion("greater_virginia"),
-  noneu: FieldValue.arrayRemove("east_coast"),
-  un: FieldValue.arrayUnion("south_carolina", "texas"),
+await db.collection("users").doc("DwightSchrute").update({
+  friends: FieldValue.arrayRemove("Kevin"),
+  enemies: FieldValue.arrayUnion("Jim"),
 });
 ```
 
 ## DELETE
 
-### Delete document
+
 <a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/delete-data#delete_documents"}>Firebase Doc</a>
 
-
-```js copy
-const res = await db.collection("cities").doc("DC").delete();
-```
 
 ### Delete document field
 
 ```js copy
-const ref = db.collection("cities").doc("BJ");
+import { FieldValue } from "firebase-admin/firestore"
 
-const res = await ref.update({
-  capital: FieldValue.delete(),
+await db.collection("users").doc("DwightSchrute").update({
+  friends: FieldValue.delete(),
 });
 ```
 
-### Delete collection // TODO check
+### Delete document
 
 ```js copy
-const snapshot = db.collection("cities").listDocuments();
-
-snapshot.forEach((doc) => {
-  doc.delete();
-});
+await db.collection("users").doc("DwightSchrute").delete();
 ```
 
-OR
+### Delete document with subcollections
+```js copy
+await db.recursiveDelete(db.collection("users").doc("DwightSchrute"));
+```
+
+### Delete collection with subcollections
 
 ```js copy
-async function deleteCollection(db, collectionPath, batchSize) {
-  const collectionRef = db.collection(collectionPath);
-  const query = collectionRef.orderBy("__name__").limit(batchSize);
-
-  return new Promise((resolve, reject) => {
-    deleteQueryBatch(db, query, resolve).catch(reject);
-  });
-}
-
-async function deleteQueryBatch(db, query, resolve) {
-  const snapshot = await query.get();
-
-  const batchSize = snapshot.size;
-  if (batchSize === 0) {
-    // When there are no documents left, we are done
-    resolve();
-    return;
-  }
-
-  // Delete documents in a batch
-  const batch = db.batch();
-  snapshot.docs.forEach((doc) => {
-    batch.delete(doc.ref);
-  });
-  await batch.commit();
-
-  // Recurse on the next process tick, to avoid
-  // exploding the stack.
-  process.nextTick(() => {
-    deleteQueryBatch(db, query, resolve);
-  });
-}
+await db.recursiveDelete(db.collection("users"));
 ```

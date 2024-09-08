@@ -72,9 +72,9 @@ await addDoc(ref, {
 ```js copy
 import { doc, getDoc } from "firebase/firestore";
 
-const snapshot = await getDoc(doc(db, "users", "MichaelScott"));
+const docSnap = await getDoc(doc(db, "users", "MichaelScott"));
 
-console.log({ ...snapshot.data(), id: snapshot.id });
+console.log({ ...docSnap.data(), id: docSnap.id });
 ```
 
 ### Get Document Realtime
@@ -89,9 +89,12 @@ console.log({ ...snapshot.data(), id: snapshot.id });
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
 
-const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
-  console.log(doc.data());
+const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (docSnap) => {
+  console.log(docSnap.data());
 });
+
+// Stop listening to changes
+unsub();
 ```
 
 ### Get All documents
@@ -109,14 +112,14 @@ const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
 import { collection, getDocs } from "firebase/firestore";
 
 const ref = collection(db, "users");
-const snapshot = await getDocs(ref);
+const querySnap = await getDocs(ref);
 
-snapshot.forEach((doc) => {
-  console.log(doc.data());
+querySnap.forEach((docSnap) => {
+  console.log(docSnap.data());
 });
 ```
 
-### Get subcollection
+### Get document subcollection
 
 <a
   style={{ color: "gray", textDecoration: "underline" }}
@@ -131,14 +134,14 @@ snapshot.forEach((doc) => {
 const { collection, getDocs } = require("firebase/firestore");
 
 const ref = collection(db, "users", "MichaelScott", "problems");
-const snapshot = await getDocs(ref);
+const querySnap = await getDocs(ref);
 
-snapshot.forEach((doc) => {
-  console.log(doc.data());
+querySnap.forEach((docSnap) => {
+  console.log(docSnap.data());
 });
 ```
 
-### Get all subcollection
+### Get all subcollections
 
 <a
   style={{ color: "gray", textDecoration: "underline" }}
@@ -153,14 +156,14 @@ snapshot.forEach((doc) => {
 import { collectionGroup, getDocs } from "firebase/firestore";  
 
 const ref = collectionGroup(db, 'problems');
-const snapshot = await getDocs(ref);
+const querySnap = await getDocs(ref);
 
-snapshot.forEach((doc) => {
-    console.log(doc.data());
+querySnap.forEach((docSnap) => {
+    console.log(docSnap.data());
 });
 ```
 
-### Filter documents (query)
+### Query documents
 
 <a
   style={{ color: "gray", textDecoration: "underline" }}
@@ -178,10 +181,10 @@ const q = query(
   where("role", "==", "Regional manager"),
   where("atOffice", "==", true)
 );
-const snapshot = await getDocs(q);
+const querySnap = await getDocs(q);
 
-snapshot.forEach((doc) => {
-  console.log(doc.data());
+querySnap.forEach((docSnap) => {
+  console.log(docSnap.data());
 });
 ```
 
@@ -214,7 +217,7 @@ not-in
 
 [Fancy stuff can count() sum() and avarage()](https://firebase.google.com/docs/firestore/query-data/aggregation-queries)
 
-[Pagenate startAt() endAt](https://firebase.google.com/docs/firestore/query-data/query-cursors)
+[Paginate startAt() endAt](https://firebase.google.com/docs/firestore/query-data/query-cursors)
 
 ## UPDATE
 
@@ -307,4 +310,5 @@ await deleteDoc(doc(db, "users", "MichaelScott"));
 
 ### Delete collection
 
-Deleting collections from a Web client is not recommended.
+Deleting collections from a Web client is not recommended. Check out cloud functions or firebase admin for deleting collections.
+
