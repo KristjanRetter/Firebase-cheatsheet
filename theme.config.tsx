@@ -1,7 +1,16 @@
 import { DocsThemeConfig } from "nextra-theme-docs";
+import SvgComponent from "./components/SvgComponent";
 
 const config: DocsThemeConfig = {
-  logo: "Firecheat",
+  logo: (
+    <div
+      style={{
+        display: "flex",
+      }}
+    >
+      <SvgComponent /> Firecheat{" "}
+    </div>
+  ),
   project: {
     link: "https://github.com/KristjanRetter/Firebase-cheatsheet",
   },
@@ -16,7 +25,6 @@ const config: DocsThemeConfig = {
             fontSize: "12px",
             marginLeft: "48px",
             marginRight: "30px",
-
           }}
           href="https://x.com/KristjanRetter"
           target="_blank"
@@ -45,6 +53,15 @@ const config: DocsThemeConfig = {
       </>
     ),
   },
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta property="og:title" content="Firecheat" />
+      <meta property="og:description" content="Firebase cheat sheet" />
+
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+    </>
+  ),
 };
 
 export default config;
