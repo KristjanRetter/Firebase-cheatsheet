@@ -3,61 +3,107 @@
 ## CREATE
 
 ### Set Document
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/queries#example_data"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/query-data/queries#example_data"
+  }
+>
+  Firebase Doc
+</a>
 
-```js  copy
+```js copy
 import { collection, doc, setDoc } from "firebase/firestore";
 
 const ref = collection(db, "users");
 
 await setDoc(doc(ref, "MichaelScott"), {
-  role: "Regional Manager ",
+  role: "Regional manager",
+  atOffice: true,
 });
 ```
 
 ### Add Document
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/quickstart#add_data"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={"https://firebase.google.com/docs/firestore/quickstart#add_data"}
+>
+  Firebase Doc
+</a>
 
 ```js copy
 import { collection, addDoc } from "firebase/firestore";
 
 const ref = collection(db, "users");
 
-const docRef = await addDoc(ref, {
-  name: "Dwight Schrute",
+await addDoc(ref, {
+  role: "Npc",
+  atOffice: false,
+});
+```
+
+### Add Subcollection
+
+```js copy
+import { collection, addDoc } from "firebase/firestore";
+
+const ref = collection(db, "users", "MichaelScott", "problems");
+
+await addDoc(ref, {
+  name: "corporate",
 });
 ```
 
 ## READ
 
 ### Get Document
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/query-data/get-data#get_a_document"
+  }
+>
+  Firebase Doc
+</a>
 
 ```js copy
 import { doc, getDoc } from "firebase/firestore";
 
-const snapshot = await getDoc(doc(db, "users", "MichaelScott"););
+const snapshot = await getDoc(doc(db, "users", "MichaelScott"));
 
-// snapshot.exists() 
+console.log({ ...snapshot.data(), id: snapshot.id });
 ```
 
 ### Get Document Realtime
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/listen"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={"https://firebase.google.com/docs/firestore/query-data/listen"}
+>
+  Firebase Doc
+</a>
 
 ```js copy
 import { doc, onSnapshot } from "firebase/firestore";
 
 const unsub = onSnapshot(doc(db, "users", "MichaelScott"), (doc) => {
-    console.log("Current data: ", doc.data());
+  console.log(doc.data());
 });
 ```
 
 ### Get All documents
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection"}>Firebase Doc</a>
+
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_collection"
+  }
+>
+  Firebase Doc
+</a>
 
 ```js copy
 import { collection, getDocs } from "firebase/firestore";
@@ -66,29 +112,62 @@ const ref = collection(db, "users");
 const snapshot = await getDocs(ref);
 
 snapshot.forEach((doc) => {
-  console.log(`${doc.id} => ${doc.data()}`);
+  console.log(doc.data());
 });
 ```
 
-### Get All subcollection
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"}>Firebase Doc</a>
+### Get subcollection
+
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/query-data/get-data#get_all_documents_in_a_subcollection"
+  }
+>
+  Firebase Doc
+</a>
 
 ```js copy
 const { collection, getDocs } = require("firebase/firestore");
 
-const ref = collection(db, "users", "MichaelScott", "problems"); 
+const ref = collection(db, "users", "MichaelScott", "problems");
 const snapshot = await getDocs(ref);
 
 snapshot.forEach((doc) => {
-  console.log(doc.id, " => ", doc.data());
+  console.log(doc.data());
 });
+```
 
-// doc.data() is never undefined for query doc snapshots
+### Get all subcollection
+
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/query-data/queries#collection-group-query"
+  }
+>
+  Firebase Doc
+</a>
+
+```js copy
+import { collectionGroup, getDocs } from "firebase/firestore";  
+
+const ref = collectionGroup(db, 'problems');
+const snapshot = await getDocs(ref);
+
+snapshot.forEach((doc) => {
+    console.log(doc.data());
+});
 ```
 
 ### Filter documents (query)
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/query-data/queries"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={"https://firebase.google.com/docs/firestore/query-data/queries"}
+>
+  Firebase Doc
+</a>
 
 ```js copy
 import { collection, query, where, getDocs } from "firebase/firestore";
@@ -96,19 +175,17 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 const ref = collection(db, "users");
 const q = query(
   ref,
-  where("mental", "==", true),
-  where("population", ">", 1000000)
+  where("role", "==", "Regional manager"),
+  where("atOffice", "==", true)
 );
 const snapshot = await getDocs(q);
 
 snapshot.forEach((doc) => {
-  console.log(doc.id, " => ", doc.data());
+  console.log(doc.data());
 });
-
 ```
 
 #### Query examples
-
 
 ```js copy
 where("population", ">", 1000000),
@@ -142,66 +219,90 @@ not-in
 ## UPDATE
 
 ### Update Document
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update-data"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/manage-data/add-data#update-data"
+  }
+>
+  Firebase Doc
+</a>
 
-```js  copy
+```js copy
 import { doc, updateDoc } from "firebase/firestore";
 
-await updateDoc(doc(db, "cities", "DC");, {
-  capital: true,
+await updateDoc(doc(db, "users", "MichaelScott"), {
+  atOffice: false,
 });
 ```
 
-### Update nested object 
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects"}>Firebase Doc</a>
+### Update nested object
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/manage-data/add-data#update_fields_in_nested_objects"
+  }
+>
+  Firebase Doc
+</a>
 
-```js  copy
-import { doc, setDoc, updateDoc } from "firebase/firestore"; 
+```js copy
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
-await updateDoc(doc(db, "users", "frank"), {
-    "favorites.color": "Red"
+await updateDoc(doc(db, "users", "MichaelScott"), {
+  "favorites.song": "Just Dance",
 });
 ```
 
 ### Update Array
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array"}>Firebase Doc</a>
 
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={
+    "https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array"
+  }
+>
+  Firebase Doc
+</a>
 
-```js  copy
+```js copy
 import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-await updateDoc(doc(db, "cities", "DC"), {
-  noneu: arrayUnion("uk"),
-  eu: arrayRemove("uk"),
+await updateDoc(doc(db, "users", "MichaelScott"), {
+  enemies: arrayUnion("Toby"),
+  friends: arrayRemove("Jim"),
 });
 ```
 
 ## DELETE
 
-### Delete document
-<a style={{color: "gray", textDecoration: "underline"}} href={"https://firebase.google.com/docs/firestore/manage-data/delete-data"}>Firebase Doc</a>
-
-
-
-
-```js  copy
-import { doc, deleteDoc } from "firebase/firestore";
-
-await deleteDoc(doc(db, "cities", "DC")); 
-
-//Deleting a document does not delete its subcollections!
-```
-
 ### Delete document field
 
-```js  copy
+```js copy
 import { doc, updateDoc, deleteField } from "firebase/firestore";
 
-await updateDoc(doc(db, 'cities', 'BJ'), {
-    capital: deleteField()
+await updateDoc(doc(db, "users", "MichaelScott"), {
+  enemies: deleteField(),
 });
+```
+
+### Delete document
+
+<a
+  style={{ color: "gray", textDecoration: "underline" }}
+  href={"https://firebase.google.com/docs/firestore/manage-data/delete-data"}
+>
+  Firebase Doc
+</a>
+
+```js copy
+import { doc, deleteDoc } from "firebase/firestore";
+
+await deleteDoc(doc(db, "users", "MichaelScott"));
+
+//Deleting a document does not delete its subcollections!
 ```
 
 ### Delete collection
