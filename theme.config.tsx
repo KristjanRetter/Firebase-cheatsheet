@@ -8,7 +8,7 @@ const config: DocsThemeConfig = {
         display: "flex",
       }}
     >
-      <SvgComponent /> Firecheat{" "}
+    Firecheat
     </div>
   ),
   project: {
