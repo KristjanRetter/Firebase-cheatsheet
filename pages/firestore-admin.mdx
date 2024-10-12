@@ -112,18 +112,19 @@ querySnap.forEach((docSnap) => {
 #### Query examples
 
 ```js copy
-.where("population", ">", 1000000),
-.where("regions", "array-contains", "west_coast"),
-.where("regions", "array-contains-any", ["west_coast", "east_coast"]); // returns every city document where the regions field is an array that contains west_coast or east_coast
-.where("country", "in", ["USA", "Japan"]); //eturns every city document where the country field is set to USA or Japan
-.orderBy("name", "desc"); // orders responses
-.limit(3); // limits reponses
-.where(
-    Filter.or(
-      Filter.where('capital', '==', true),
-      Filter.where('population', '>=', 1000000)
+const querySnap = await db.collection("cities")
+  .where("population", ">", 1000000),
+  .where("regions", "array-contains", "west_coast"),
+  .where("regions", "array-contains-any", ["west_coast", "east_coast"]); // returns every city document where the regions field is an array that contains west_coast or east_coast
+  .where("country", "in", ["USA", "Japan"]); //eturns every city document where the country field is set to USA or Japan
+  .orderBy("name", "desc"); // orders responses
+  .limit(3); // limits reponses
+  .where(
+      Filter.or(
+        Filter.where('capital', '==', true),
+        Filter.where('population', '>=', 1000000)
+      )
     )
-  )
 ```
 
 ```md
